@@ -1,0 +1,13 @@
+node_modules
+npm-debug.log
+coverage
+.idea
+.todo
+# .env
+.note
+.nyc_output
+.git
+.gitignore
+.env.example
+.dockerignore
+.travis.yml

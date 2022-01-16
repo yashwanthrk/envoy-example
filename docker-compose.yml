@@ -3,8 +3,10 @@ services:
   envoy:
     image: envoyproxy/envoy:v1.21-latest
     ports:
-      - "8800:8800"
-      - "8081:8081"
+      - "8080:8080"
+      - "8081:8081" # Port to access Envoy's admin interface
+      - "8800:8800" # Port to access the api through Envoy
+
     volumes:
       - ./envoy.yaml:/etc/envoy/envoy.yaml
   # api:

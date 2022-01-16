@@ -13,24 +13,24 @@ static_resources:
                 stat_prefix: ingress_http
                 # Structured access log in JSON format
                 access_log:
-                - name: envoy.access_loggers.stderr
-                  typed_config:
-                    "@type": type.googleapis.com/envoy.extensions.access_loggers.stream.v3.StderrAccessLog
-                    log_format:
-                      json_format:
-                        type: "request"
-                        protocol: "%PROTOCOL%"
-                        method: "%REQ(:METHOD)%"
-                        path: "%REQ(:path)%"
-                        responseCode: "%RESPONSE_CODE%"
-                        duration: "%DURATION%"
-                        CONNECTION_TERMINATION_DETAILS: "%CONNECTION_TERMINATION_DETAILS%"
-                        UPSTREAM_CLUSTER: "%UPSTREAM_CLUSTER%"
-                        UPSTREAM_HOST: "%UPSTREAM_HOST%"
-                        UPSTREAM_LOCAL_ADDRESS: "%UPSTREAM_LOCAL_ADDRESS%"
-                        UPSTREAM_TRANSPORT_FAILURE_REASON: "%UPSTREAM_TRANSPORT_FAILURE_REASON%"
-                      omit_empty_values: True
-                      
+                  - name: envoy.access_loggers.stderr
+                    typed_config:
+                      "@type": type.googleapis.com/envoy.extensions.access_loggers.stream.v3.StderrAccessLog
+                      log_format:
+                        json_format:
+                          type: "request"
+                          protocol: "%PROTOCOL%"
+                          method: "%REQ(:METHOD)%"
+                          path: "%REQ(:path)%"
+                          responseCode: "%RESPONSE_CODE%"
+                          duration: "%DURATION%"
+                          CONNECTION_TERMINATION_DETAILS: "%CONNECTION_TERMINATION_DETAILS%"
+                          UPSTREAM_CLUSTER: "%UPSTREAM_CLUSTER%"
+                          UPSTREAM_HOST: "%UPSTREAM_HOST%"
+                          UPSTREAM_LOCAL_ADDRESS: "%UPSTREAM_LOCAL_ADDRESS%"
+                          UPSTREAM_TRANSPORT_FAILURE_REASON: "%UPSTREAM_TRANSPORT_FAILURE_REASON%"
+                        omit_empty_values: True
+
                 route_config:
                   name: local_route
                   virtual_hosts:
@@ -50,8 +50,54 @@ static_resources:
 
                 # Don't forget: No error message but also no functionality if missing
                 http_filters:
+                  # - name: envoy.filters.http.jwt_authn
+                  #   typed_config:
+                  #     "@type": type.googleapis.com/envoy.extensions.filters.http.jwt_authn.v3.JwtAuthentication
+                  #     providers:
+                  #       example-jwt:
+                  #         # issuer: "cloudphyisican.com"
+                  #         # audience: "cp.audience"
+                  #         forward: true
+                  #         forward_payload_header: x-jwt-payload
+
+                  #         local_jwks:
+                  #           inline_string: '{"keys":[{"kty":"RSA","use":"sig","n":"AKLZnXuPrcIYP7kHqg6ekBSVs4rVQOzMp-ZOWu2zRZkJ6IdWdQQCmIHI9Qakgm0W3wzYGmRAon_a0OohHpac32d7oWYqQ6uVtnMrEsNTEw8nH1OnH-IfcF0bO2sE4yBC7MLAnMA01PxOsekUPmVT8J1aNQ7ZHtZv3b9LZsO1NUcb-gAKBcMzyV7tbw3nTdRnXpF0q7hcYwfWaAaqSCJvFcF4HnsYY7KtgKwOgrQovGmX3NUi8l9Adt_yx8ocK_qGm5glP4-vwjHPHQ-X4HJbUz6BVBNm58exYeYV83SxoO48y-fGu6qVM2CopeiEUbYViIDi5CzCI8H7CzgcEKv2w7Q5AR_DDGDllzeDpGRPQYwjuHhPGgHAnNEHBw7Ie73VBRTnFTcZjKQ6OJKoEJ9iWH9Y1XNE4AJstuezB81UDNGz3qUrYbX1UEwhtuzCieME1eCRP5GsHZIrwpugR_t_f-zdK1bTTJeLl5qEP49a5IbcynIjuCF2TTAl61lSbWcynQ","e":"AQAB"}]}'
+                  #     rules:
+                  #       - match:
+                  #           prefix: "/api/v2"
+                  #         requires:
+                  #           provider_name: "example-jwt"
+
+                  - name: envoy.filters.http.jwt_authn
+                    typed_config:
+                      "@type": type.googleapis.com/envoy.extensions.filters.http.jwt_authn.v3.JwtAuthentication
+                      providers:
+                        example-jwt:
+                          # issuer: "cloudphyisican.com"
+                          # audience: "cp.audience"
+                          forward: true
+                          forward_payload_header: x-jwt-payload
+
+                          local_jwks:
+                            inline_string: '{"keys":[{"kty":"RSA","use":"sig","n":"AKLZnXuPrcIYP7kHqg6ekBSVs4rVQOzMp-ZOWu2zRZkJ6IdWdQQCmIHI9Qakgm0W3wzYGmRAon_a0OohHpac32d7oWYqQ6uVtnMrEsNTEw8nH1OnH-IfcF0bO2sE4yBC7MLAnMA01PxOsekUPmVT8J1aNQ7ZHtZv3b9LZsO1NUcb-gAKBcMzyV7tbw3nTdRnXpF0q7hcYwfWaAaqSCJvFcF4HnsYY7KtgKwOgrQovGmX3NUi8l9Adt_yx8ocK_qGm5glP4-vwjHPHQ-X4HJbUz6BVBNm58exYeYV83SxoO48y-fGu6qVM2CopeiEUbYViIDi5CzCI8H7CzgcEKv2w7Q5AR_DDGDllzeDpGRPQYwjuHhPGgHAnNEHBw7Ie73VBRTnFTcZjKQ6OJKoEJ9iWH9Y1XNE4AJstuezB81UDNGz3qUrYbX1UEwhtuzCieME1eCRP5GsHZIrwpugR_t_f-zdK1bTTJeLl5qEP49a5IbcynIjuCF2TTAl61lSbWcynQ","e":"AQAB"}]}'
+
+                          # remote_jwks:
+                          #   http_uri:
+                          #     uri: http://localhost:4000/.well-known/jwks.json
+                          #     cluster: server1
+                          #     timeout: 5s
+                          #   cache_duration:
+                          #     seconds: 300
+
+                      rules:
+                        - match:
+                            prefix: "/api/v2"
+                          requires:
+                            provider_name: "example-jwt"
+
                   - name: envoy.filters.http.router
                     typed_config: {}
+
   clusters:
     - name: server1
       connect_timeout: 0.25s
@@ -102,7 +148,7 @@ static_resources:
                     socket_address:
                       address: 192.168.0.102
                       port_value: 4001
-admin:
+
   access_log_path: "/dev/null"
   address:
     socket_address:

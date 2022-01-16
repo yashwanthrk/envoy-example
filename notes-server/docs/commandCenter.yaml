@@ -1,0 +1,1518 @@
+openapi: 3.0.0
+info:
+  title: EMR CLOUD PHYSICIAN
+  description: API END POINTS
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT  # optional, for documentation purposes only
+    # Descriptions of common responses
+  responses:
+    NotFound:
+      description: The specified resource was not found
+
+    Unauthorized:
+      description: Unauthorized
+      
+  schemas:
+    ResponseOne:
+      type: object
+      properties:
+        count:
+          type: integer
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+                bedCutoff:
+                  type: integer
+                hospitalInfo:
+                  type: object
+                name:
+                  type: integer
+                isActive:
+                  type: boolean
+                createdAt:
+                  type: date-time
+                _id:
+                  type: uuid
+
+          
+    ResponseTwo:
+      type: object
+      properties:
+        hunts:
+          type: boolean
+        age:
+          type: integer
+    
+tags:
+  - name: Super Admin
+  - name: login - different users
+  - name: r-alert
+  - name: Sys Admin
+  - name: user dashboard
+  - name: billing admin
+paths:
+  /management/command_center/create:
+    post:
+      tags:
+        - Super Admin
+      summary: create command center or hospital
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: Test-8
+                address: HSR layout
+                controlNumber: null
+                hospitalCode: test51314qfac
+                cityCode: Bangalore
+                stateCode: Ka
+                countryCode: India
+                isActive: true
+      parameters:
+        - name: accept
+          in: header
+          schema:
+            type: string
+          example: application/json, text/plain, */*
+        - name: authorization
+          in: header
+          schema:
+            type: string
+          example: "{{token_super_admin}}"
+        - name: content-type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /management/command_center/:
+    get:
+      tags:
+        - Super Admin
+      summary: get all command center or hospital
+      parameters:
+        - name: accept
+          in: header
+          schema:
+            type: string
+          example: application/json, text/plain, */*
+        - name: authorization
+          in: header
+          schema:
+            type: string
+          example: "{{token_super_admin}}"
+        - name: content-type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      security:
+        - bearerAuth: []
+      responses:
+          "200":
+            description: Successful response
+            content:
+              application/json: 
+                schema:
+                  oneOf:
+                    - $ref: '#/components/schemas/ResponseOne'
+                    - $ref: '#/components/schemas/ResponseTwo'
+          403:
+            $ref: '#/components/responses/Unauthorized'   
+          404:
+            $ref: '#/components/responses/NotFound' 
+            
+            
+  /management/command_center/60951c5aa10283879eb2ca77:
+    get:
+      tags:
+        - Super Admin
+      summary: get single command center info
+      parameters:
+        - name: accept
+          in: header
+          schema:
+            type: string
+          example: application/json, text/plain, */*
+        - name: authorization
+          in: header
+          schema:
+            type: string
+          example: "{{token_system_admin}}"
+        - name: content-type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+            200:
+              description: Successful response
+  
+            404:
+              description: Not found response
+              content:
+                text/plain:
+                  schema:
+                    title: Weather not found
+                    type: string
+                    example: Not found
+  /management/command_center/update/608133b1b819c900207bffc0:
+    patch:
+      tags:
+        - Super Admin
+      summary: edit command center
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: Test-5
+                address: HSR layout
+                controlNumber: null
+                hospitalCode: TBTM
+                cityCode: Bangalore
+                stateCode: Ka
+                countryCode: India
+                isActive: "true"
+      parameters:
+        - name: accept
+          in: header
+          schema:
+            type: string
+          example: application/json, text/plain, */*
+        - name: authorization
+          in: header
+          schema:
+            type: string
+          example: "{{token_super_admin}}"
+        - name: content-type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /management/user/create:
+    post:
+      tags:
+        - Super Admin
+      summary: Create user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                title: dumy 16
+                name: dummy cc 16
+                qualification: PHD
+                email: dummyCC16@cp.net
+                password: Kill@123
+                role: Nurse
+                allowedRoles:
+                  - Critical Care Nurse
+                hospitals:
+                  - 606ea811bde9ea27bdc8955b
+                commandCenterID: 60951c5aa10283879eb2ca77
+                phone: "1234567890"
+      parameters:
+        - name: accept
+          in: header
+          schema:
+            type: string
+          example: application/json, text/plain, */*
+        - name: authorization
+          in: header
+          schema:
+            type: string
+          example: "{{token_system_admin}}"
+        - name: content-type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /super_admin/user/edit/6087b808e77484b37e8b470c:
+    patch:
+      tags:
+        - Super Admin
+      summary: Edit user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                title: Test_Doctor
+                name: QA Doc1
+                qualification: MD
+                email: qadoc@cp.net
+                password: null
+                role: Physician
+                allowedRoles:
+                  - Medical Administrator
+                  - Billing Administrator
+                  - Dietitian
+                  - Critical Care Nurse
+                  - Nurse
+                  - Nurse Practitioner
+                  - Pharmacologist
+                  - Physician
+                  - Tv
+                  - Tv-Covid
+                  - Auditor
+                  - R-Alert
+                  - Lab Technician
+                  - Documentation Specialist
+                  - Physical Therapist
+                  - Occupational Therapist
+                  - Respiratory Therapist
+                active: true
+                lockedStatus: unlock
+                hospitals:
+                  - 5d5e1fdc47c39208e9f12338
+                  - 5dd623a41491de09196a9a59
+                units:
+                  - _id: 5dd626911491de72476aa418
+                    name: ICU
+                    hospitalName: Cyber Hosp
+                  - _id: 5dd677c11491de18606b5119
+                    name: ED
+                    hospitalName: Cyber Hosp
+                phone: "9797656555"
+      parameters:
+        - name: accept
+          in: header
+          schema:
+            type: string
+          example: application/json, text/plain, */*
+        - name: authorization
+          in: header
+          schema:
+            type: string
+          example: "{{token_super_admin}}"
+        - name: content-type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /management/user/:
+    get:
+      tags:
+        - Super Admin
+      summary: Get user list
+      parameters:
+        - name: accept
+          in: header
+          schema:
+            type: string
+          example: application/json, text/plain, */*
+        - name: authorization
+          in: header
+          schema:
+            type: string
+          example: "{{token_super_admin}}"
+        - name: content-type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /super_admin/hospital/add/:
+    post:
+      tags:
+        - Super Admin
+      summary: Add hospital
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: Test-add-111
+                address: HSR layout
+                controlNumber: null
+                hospitalCode: testAdd1234
+                cityCode: Bangalore
+                stateCode: Ka
+                countryCode: India
+                isActive: "true"
+                logo: >-
+                  https://s3.ap-south-1.amazonaws.com/emr-public/assets/images/hospitalLogo16176147728631617614773095.jpeg
+                commandCenterID: 606ea89beeb37830ff618f37
+      parameters:
+        - name: accept
+          in: header
+          schema:
+            type: string
+          example: application/json, text/plain, */*
+        - name: authorization
+          in: header
+          schema:
+            type: string
+          example: "{{token_super_admin}}"
+        - name: content-type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /management/hospital/update/608b934bdb60ec0065e5f226:
+    patch:
+      tags:
+        - Super Admin
+      summary: "Edit hospital "
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                logo: >-
+                  https://s3.ap-south-1.amazonaws.com/emr-public/assets/images/hospitalLogo16176147728631617614773095.jpeg
+                commandCenterID: 608134905c205e0039a23596
+                name: Sub-1
+                address: near hsr
+                hospitalCode: hsr01
+                stateCode: ka
+                cityCode: blr
+                countryCode: in
+                controlNumber: "001"
+                isActive: true
+      parameters:
+        - name: accept
+          in: header
+          schema:
+            type: string
+          example: application/json, text/plain, */*
+        - name: authorization
+          in: header
+          schema:
+            type: string
+          example: "{{token_super_admin}}"
+        - name: content-type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /super_admin/hospital/submitUnit:
+    post:
+      tags:
+        - Super Admin
+      summary: Submit units
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                hospitalID: 606ebab6d52359d6df3640b6
+                name: ICU
+                phone: 232323
+                speedDial: 1111
+                anydeskId: "23232"
+                meetLink: https://meet.google.com/
+                pacsLink: null
+                lisLink: null
+                rnAssigned: []
+                active: true
+                cpManaged: true
+                unitType: ED
+                unitSpecType: Covid
+      parameters:
+        - name: accept
+          in: header
+          schema:
+            type: string
+          example: application/json, text/plain, */*
+        - name: authorization
+          in: header
+          schema:
+            type: number
+          example: >-
+            Bearer
+            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InN1cGVyYWRtaW5AZ21haWwuY29tIiwiaWF0IjoxNjE3NjE3MTcwLCJleHAiOjE2MTgyMjE5NzB9.02M1T928iaoQX_5oRiOmR4N464N1sEgjyBZn4y50A_8
+        - name: content-type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /management/hospital/submitDoctor:
+    post:
+      tags:
+        - Super Admin
+      summary: Submit doctor
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                hospitalID: 608134905c205e0039a23597
+                id: null
+                name: mandelassssss
+                gender: Male
+                phone: "1236547890"
+                speciality: anything
+      parameters:
+        - name: accept
+          in: header
+          schema:
+            type: string
+          example: application/json, text/plain, */*
+        - name: authorization
+          in: header
+          schema:
+            type: string
+          example: "{{token_super_admin}}"
+        - name: content-type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /management/hospital/deleteDoctor:
+    post:
+      tags:
+        - Super Admin
+      summary: Delete Doctor
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                hospitalID: 608134905c205e0039a23597
+                id: 609159f6c7bb91e98d4b7698
+      parameters:
+        - name: accept
+          in: header
+          schema:
+            type: string
+          example: application/json, text/plain, */*
+        - name: authorization
+          in: header
+          schema:
+            type: string
+          example: "{{token_super_admin}}"
+        - name: content-type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /management/hospital/submitCamera:
+    post:
+      tags:
+        - Super Admin
+      summary: Submit camera
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                hospitalID: 608134905c205e0039a23597
+                unitID: 608f9c5495fca500bd9a12ec
+                id: null
+                cameraName: Cam test
+                userName: sysadmin@cp.net
+                password: 7Bell777%
+                channel: ch1
+                cameraIp: 1.1.1.1
+                remark: kick ass
+      parameters:
+        - name: accept
+          in: header
+          schema:
+            type: string
+          example: application/json, text/plain, */*
+        - name: authorization
+          in: header
+          schema:
+            type: string
+          example: "{{token_super_admin}}"
+        - name: content-type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /management/hospital/deleteCamera:
+    post:
+      tags:
+        - Super Admin
+      summary: Delete Camera
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                hospitalID: 608134905c205e0039a23597
+                unitID: 608f9c5495fca500bd9a12ec
+                id: 609156e92468e2e50c7f0d77
+      parameters:
+        - name: accept
+          in: header
+          schema:
+            type: string
+          example: application/json, text/plain, */*
+        - name: authorization
+          in: header
+          schema:
+            type: string
+          example: "{{token_super_admin}}"
+        - name: content-type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /management/hospital/submitBed:
+    post:
+      tags:
+        - Super Admin
+      summary: Submit bed
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                hospitalID: 608134905c205e0039a23597
+                unitID: 608f9c5495fca500bd9a12ec
+                id: null
+                bed_no: "14"
+                camera: Cam1
+                remark: be careful
+                preset: little
+                tilt: ""
+                pan: null
+                zoom: null
+      parameters:
+        - name: accept
+          in: header
+          schema:
+            type: string
+          example: application/json, text/plain, */*
+        - name: authorization
+          in: header
+          schema:
+            type: string
+          example: "{{token_super_admin}}"
+        - name: content-type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /management/hospital/deleteBed:
+    post:
+      tags:
+        - Super Admin
+      summary: Delete bed
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                hospitalID: 608134905c205e0039a23597
+                unitID: 608f9c5495fca500bd9a12ec
+                id: 60910d7aa1b5680039294ba0
+      parameters:
+        - name: accept
+          in: header
+          schema:
+            type: string
+          example: application/json, text/plain, */*
+        - name: authorization
+          in: header
+          schema:
+            type: string
+          example: "{{token_super_admin}}"
+        - name: content-type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /management/hospital/5c8795bde431490f7817629f:
+    get:
+      tags:
+        - Super Admin
+      summary: get single hospital info
+      parameters:
+        - name: accept
+          in: header
+          schema:
+            type: string
+          example: application/json, text/plain, */*
+        - name: authorization
+          in: header
+          schema:
+            type: string
+          example: "{{token_system_admin}}"
+        - name: content-type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+
+  /management/hospital/5c8795bde431490f7817629f/unit/5dca4bd3c4d1ac9da3331da6:
+    get:
+      tags:
+        - Super Admin
+      summary: get single unit info
+      parameters:
+        - name: accept
+          in: header
+          schema:
+            type: string
+          example: application/json, text/plain, */*
+        - name: authorization
+          in: header
+          schema:
+            type: string
+          example: "{{token_super_admin}}"
+        - name: content-type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /management/ralert/60951c5aa10283879eb2ca77:
+    get:
+      tags:
+        - Super Admin
+      summary: get ralert
+      parameters:
+        - name: accept
+          in: header
+          schema:
+            type: string
+          example: application/json, text/plain, */*
+        - name: authorization
+          in: header
+          schema:
+            type: string
+          example: "{{token_system_admin}}"
+        - name: content-type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+
+  management/user/create:
+    post:
+      tags:
+        - Super Admin
+      summary: create admin roles ( billing admin or sys admin)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                title: ""
+                name: dummy88
+                qualification: ""
+                hospitals: []
+                units: []
+                role: Super Billing Administrator
+                allowedRoles: ""
+                email: dummy88@cp.net
+                phone: "3214569872"
+                active: true
+                lockedStatus: null
+                password: Kill@123
+                commandCenterID: 60e55e640eb669001f2868df
+      parameters:
+        - name: Connection
+          in: header
+          schema:
+            type: string
+          example: keep-alive
+        - name: sec-ch-ua
+          in: header
+          schema:
+            type: string
+          example: '" Not;A Brand";v="99", "Google Chrome";v="91", "Chromium";v="91"'
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json, text/plain, */*
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+          example: >-
+            Bearer
+            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InN1cGVyYWRtaW5AZ21haWwuY29tIiwiaWF0IjoxNjI5Mjc3MjAzLCJleHAiOjE2MzA0ODY4MDN9.q0SuAf-9SZKDDyHxhwM_-qOToXznsF4N1WXXXQD_k6s
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: Origin
+          in: header
+          schema:
+            type: string
+          example: http://localhost:4200
+        - name: Sec-Fetch-Site
+          in: header
+          schema:
+            type: string
+          example: same-site
+        - name: Sec-Fetch-Mode
+          in: header
+          schema:
+            type: string
+          example: cors
+        - name: Sec-Fetch-Dest
+          in: header
+          schema:
+            type: string
+          example: empty
+        - name: Referer
+          in: header
+          schema:
+            type: string
+          example: http://localhost:4200/
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /management/delete_logo:
+    delete:
+      tags:
+        - Super Admin
+      summary: delete logo
+      parameters:
+        - name: Connection
+          in: header
+          schema:
+            type: string
+          example: keep-alive
+        - name: sec-ch-ua
+          in: header
+          schema:
+            type: string
+          example: '" Not;A Brand";v="99", "Google Chrome";v="91", "Chromium";v="91"'
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json, text/plain, */*
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+          example: "{{token_super_admin}}"
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: Origin
+          in: header
+          schema:
+            type: string
+          example: http://localhost:4200
+        - name: Sec-Fetch-Site
+          in: header
+          schema:
+            type: string
+          example: same-site
+        - name: Sec-Fetch-Mode
+          in: header
+          schema:
+            type: string
+          example: cors
+        - name: Sec-Fetch-Dest
+          in: header
+          schema:
+            type: string
+          example: empty
+        - name: Referer
+          in: header
+          schema:
+            type: string
+          example: http://localhost:4200/
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /users/login:
+    post:
+      tags:
+        - login - different users
+      summary: Normal User Login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: nurse@cp.net
+                password: U2FsdGVkX1/404OwIpdJ3HkrPzR/m8Y3LF+IIuNPhns=
+      parameters:
+        - name: Connection
+          in: header
+          schema:
+            type: string
+          example: keep-alive
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json, text/plain, */*
+        - name: User-Agent
+          in: header
+          schema:
+            type: number
+          example: >-
+            Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like
+            Gecko) Chrome/83.0.4103.61 Safari/537.36
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: Origin
+          in: header
+          schema:
+            type: string
+          example: http://localhost:4202
+        - name: Sec-Fetch-Site
+          in: header
+          schema:
+            type: string
+          example: same-site
+        - name: Sec-Fetch-Mode
+          in: header
+          schema:
+            type: string
+          example: cors
+        - name: Sec-Fetch-Dest
+          in: header
+          schema:
+            type: string
+          example: empty
+        - name: Referer
+          in: header
+          schema:
+            type: string
+          example: http://localhost:4202/login
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /iot/ralert/devices/60951c5aa10283879eb2ca77:
+    get:
+      tags:
+        - r-alert
+      summary: get ralert
+      parameters:
+        - name: accept
+          in: header
+          schema:
+            type: string
+          example: application/json, text/plain, */*
+        - name: authorization
+          in: header
+          schema:
+            type: string
+          example: "{{token_system_admin}}"
+        - name: content-type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /iot/ralert/5c8795eebc382d0fc2bc1b44/5e37e1119edae6011cd0d30e/beds:
+    get:
+      tags:
+        - r-alert
+      summary: get availabe beds
+      parameters:
+        - name: accept
+          in: header
+          schema:
+            type: string
+          example: application/json, text/plain, */*
+        - name: authorization
+          in: header
+          schema:
+            type: string
+          example: "{{token_super_admin}}"
+        - name: content-type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /iot/ralert/devices:
+    post:
+      tags:
+        - r-alert
+      summary: add device
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                deviceId: 12haa1415
+                comment: null
+                hospitalName: PNR Hosp
+                unitName: ITU
+                hospitalLogo: >-
+                  https://s3.ap-south-1.amazonaws.com/emr-public/assets/images/hospitalLogo16013842223871601384222891.png
+                wifi:
+                  - ssid: Robocraze
+                    psk: Robocr@ze
+                    dns:
+                      - null
+                      - null
+                      - null
+                      - null
+                    ip:
+                      - null
+                      - null
+                      - null
+                      - null
+                    subnet:
+                      - null
+                      - null
+                      - null
+                      - null
+                    gateway:
+                      - null
+                      - null
+                      - null
+                      - null
+                    advanced: false
+                commandCenterID: 60951c5aa10283879eb2ca77
+      parameters:
+        - name: sec-ch-ua
+          in: header
+          schema:
+            type: string
+          example: '" Not A;Brand";v="99", "Chromium";v="90", "Google Chrome";v="90"'
+        - name: accept
+          in: header
+          schema:
+            type: string
+          example: application/json, text/plain, */*
+        - name: authorization
+          in: header
+          schema:
+            type: string
+          example: "{{token_super_admin}}"
+        - name: user-agent
+          in: header
+          schema:
+            type: number
+          example: >-
+            Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like
+            Gecko) Chrome/90.0.4430.93 Safari/537.36
+        - name: content-type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /iot/ralert/5c8795eebc382d0fc2bc1b44/5e37e1119edae6011cd0d30e/allocatedBeds:
+    get:
+      tags:
+        - r-alert
+      summary: get allocated rAlert beds
+      parameters:
+        - name: Connection
+          in: header
+          schema:
+            type: string
+          example: keep-alive
+        - name: sec-ch-ua
+          in: header
+          schema:
+            type: string
+          example: '" Not;A Brand";v="99", "Google Chrome";v="91", "Chromium";v="91"'
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json, text/plain, */*
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+          example: >-
+            Bearer
+            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im51cnNlQGNwLm5ldCIsImlhdCI6MTYzNDEyMjA0MiwiZXhwIjoxNjM1MzMxNjQyfQ.Ya01PUVcp7JBYdpuLqx6ihDaN8CcXobDqEUBqEtFwI8
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: Origin
+          in: header
+          schema:
+            type: string
+          example: http://localhost:4200
+        - name: Sec-Fetch-Site
+          in: header
+          schema:
+            type: string
+          example: same-site
+        - name: Sec-Fetch-Mode
+          in: header
+          schema:
+            type: string
+          example: cors
+        - name: Sec-Fetch-Dest
+          in: header
+          schema:
+            type: string
+          example: empty
+        - name: Referer
+          in: header
+          schema:
+            type: string
+          example: http://localhost:4200/
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /sys_admin/user/create:
+    post:
+      tags:
+        - Sys Admin
+      summary: Create user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                title: dumy
+                name: dummy cc 2
+                qualification: PHD
+                email: dummyCC2@cp.net
+                password: kill
+                role: Nurse
+                allowedRoles:
+                  - Critical Care Nurse
+                commandCenters:
+                  - 606ebab6d52359d6df3640b5
+                hospitals:
+                  - 606ea811bde9ea27bdc8955b
+                phone: null
+      parameters:
+        - name: accept
+          in: header
+          schema:
+            type: string
+          example: application/json, text/plain, */*
+        - name: authorization
+          in: header
+          schema:
+            type: string
+          example: "{{token_system_admin}}"
+        - name: content-type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /sys_admin/user/edit/5e69f78d1838cbfc547d3618:
+    patch:
+      tags:
+        - Sys Admin
+      summary: "Edit user "
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                title: Test_Doctor
+                name: QA Doc1
+                qualification: MD
+                email: qadoc@cp.net
+                password: null
+                role: Physician
+                allowedRoles:
+                  - Medical Administrator
+                  - Billing Administrator
+                  - Dietitian
+                  - Critical Care Nurse
+                  - Nurse
+                  - Nurse Practitioner
+                  - Pharmacologist
+                  - Physician
+                  - Tv
+                  - Tv-Covid
+                  - Auditor
+                  - R-Alert
+                  - Lab Technician
+                  - Documentation Specialist
+                  - Physical Therapist
+                  - Occupational Therapist
+                  - Respiratory Therapist
+                active: true
+                lockedStatus: unlock
+                hospitals:
+                  - 5d5e1fdc47c39208e9f12338
+                  - 5dd623a41491de09196a9a59
+                units:
+                  - _id: 5dd626911491de72476aa418
+                    name: ICU
+                    hospitalName: Cyber Hosp
+                  - _id: 5dd677c11491de18606b5119
+                    name: ED
+                    hospitalName: Cyber Hosp
+                phone: "9797656555"
+      parameters:
+        - name: accept
+          in: header
+          schema:
+            type: string
+          example: application/json, text/plain, */*
+        - name: authorization
+          in: header
+          schema:
+            type: string
+          example: "{{token_system_admin}}"
+        - name: content-type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /sys_admin/user/:
+    get:
+      tags:
+        - Sys Admin
+      summary: Get user list
+      parameters:
+        - name: accept
+          in: header
+          schema:
+            type: string
+          example: application/json, text/plain, */*
+        - name: authorization
+          in: header
+          schema:
+            type: string
+          example: "{{token_system_admin}}"
+        - name: content-type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /sys_admin/command_center/60951c5aa10283879eb2ca77:
+    get:
+      tags:
+        - Sys Admin
+      summary: get single command center info
+      parameters:
+        - name: accept
+          in: header
+          schema:
+            type: string
+          example: application/json, text/plain, */*
+        - name: authorization
+          in: header
+          schema:
+            type: string
+          example: "{{token_system_admin}}"
+        - name: content-type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /sys_admin/hospital:
+    get:
+      tags:
+        - Sys Admin
+      summary: "get all command center or hospital "
+      parameters:
+        - name: accept
+          in: header
+          schema:
+            type: string
+          example: application/json, text/plain, */*
+        - name: authorization
+          in: header
+          schema:
+            type: string
+          example: "{{token_system_admin}}"
+        - name: content-type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /sys_admin/hospital/5c8795bde431490f7817629f:
+    get:
+      tags:
+        - Sys Admin
+      summary: get single hospital info
+      parameters:
+        - name: accept
+          in: header
+          schema:
+            type: string
+          example: application/json, text/plain, */*
+        - name: authorization
+          in: header
+          schema:
+            type: string
+          example: "{{token_system_admin}}"
+        - name: content-type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /sys_admin/hospital/5c8795bde431490f7817629f/unit/5dca4bd3c4d1ac9da3331da6:
+    get:
+      tags:
+        - Sys Admin
+      summary: get single unit info Copy
+      parameters:
+        - name: accept
+          in: header
+          schema:
+            type: string
+          example: application/json, text/plain, */*
+        - name: authorization
+          in: header
+          schema:
+            type: string
+          example: "{{token_system_admin}}"
+        - name: content-type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /hospitals/hosp_and_patients:
+    get:
+      tags:
+        - user dashboard
+      summary: get hospitals and patients
+      parameters:
+        - name: User-Agent
+          in: header
+          schema:
+            type: number
+          example: >-
+            Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:88.0) Gecko/20100101
+            Firefox/88.0
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json, text/plain, */*
+        - name: Accept-Language
+          in: header
+          schema:
+            type: number
+          example: en-US,en;q=0.5
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+          example: "{{token_nurse}}"
+        - name: Origin
+          in: header
+          schema:
+            type: string
+          example: http://localhost:4200
+        - name: DNT
+          in: header
+          schema:
+            type: integer
+          example: "1"
+        - name: Connection
+          in: header
+          schema:
+            type: string
+          example: keep-alive
+        - name: Referer
+          in: header
+          schema:
+            type: string
+          example: http://localhost:4200/
+        - name: orders
+          in: query
+          schema:
+            type: boolean
+          example: "false"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /billing/commandCenters/:
+    get:
+      tags:
+        - billing admin
+      summary: "get all command center or hospital "
+      parameters:
+        - name: accept
+          in: header
+          schema:
+            type: string
+          example: application/json, text/plain, */*
+        - name: authorization
+          in: header
+          schema:
+            type: string
+          example: "{{token_billing_admin}}"
+        - name: content-type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  

@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "rsa-pem-to-jwk": "1.1.3"
+  }
+}

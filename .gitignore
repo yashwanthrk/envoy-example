@@ -1,0 +1,12 @@
+node_modules/
+app-env
+*.log
+.prettierrc
+.config.js
+dist
+.editorconfig
+.idea
+certs/
+.env*
+.vscode/
+.nyc_output/

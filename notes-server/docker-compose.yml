@@ -1,0 +1,16 @@
+version: '3'
+services:
+  app:
+    container_name: test-server-a
+    restart: always
+    build: .
+    ports:
+      - '3000:3000'
+    env_file: .env
+    volumes:
+      - app:/usr/app
+      - node_modules:/usr/app/node_modules
+
+volumes:
+  app: null
+  node_modules: null

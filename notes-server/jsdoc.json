@@ -1,0 +1,23 @@
+{
+    "source": {
+        "include": [
+            "api"
+        ],
+        "includePattern": ".+\\.js(doc|x)?$",
+        "excludePattern": "(node_modules/|docs)"
+    },
+    "plugins": [
+        "plugins/markdown"
+    ],
+    "recurseDepth": 10,
+    "opts": {
+        "configure": "jsdoc.json",
+        "encoding": "utf8",
+        "destination": "./docs/",
+        "recurse": true
+    },
+    "templates": {
+        "cleverLinks": true,
+        "monospaceLinks": true
+    }
+}

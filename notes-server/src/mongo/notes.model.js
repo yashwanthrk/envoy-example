@@ -1,0 +1,122 @@
+const mongoose = require("mongoose");
+
+const codeSheet = {
+  information: {
+    advancedSecondAirway: String,
+    CPRDate: Date,
+    daysAfterICUAdmissionToArrest: String,
+    monitoring: String,
+    locationOfArrest: String,
+    aclsInterventionsInPlace: String,
+    bedsideTeamLeader: String,
+    reasonForHospitalAdmission: String,
+    teamLeaderDesignation: String,
+    preEventGlasgowComaScale: String,
+    numberOfStaffAtBedside: String,
+    preEventAirway: String,
+    intensivistFromCloudphysician: String,
+    typeOfInitialAirwayAfterStart: String,
+    teleICURN: String,
+    debriefing: String,
+  },
+  result: {
+    timeTakenToAchieveAdvancedAirway: String,
+    immediatePrecipitatingCause: String,
+    timeToFirstDoseOfEpinephrine: String,
+    resuscitationAttempted: String,
+    initialResuscitationCondition: String,
+    timeOfCPRNeededToAchieveROSC: String,
+    initialRhythm: String,
+    ROSCAchievedLength: String,
+    timeCPRTeamCalled: String,
+    hospitalDischargeOrTransfer: String,
+    timeCPRTeamArrives: String,
+    glasgowComaScoreAfterCPR: String,
+    timeCollapseConfirmed: String,
+    CPCScoreAt1Month: String,
+    firstProviderGivingCPR: String,
+    exactTimeOfROSC: String,
+    timeCPRGivenFor: String,
+    exactTimeOfEndOfROSC: String,
+    timeOfDeath: String,
+    outcome: String,
+  },
+  data: [
+    {
+      dateTime: String,
+      time: String,
+      medication: String,
+      dosage: String,
+      pulse: String,
+      rhythm: String,
+      defib: String,
+      joules: String,
+      others: String,
+      cprType: String,
+    },
+  ],
+  codeSheetType: String,
+  isDeleteEnabled: Boolean,
+};
+
+const notesSchema = new mongoose.Schema({
+  finalNotes: [
+    {
+      createdTimestamp: Date,
+      content: [
+        {
+          author: String,
+          authorId: String,
+          authorType: String,
+          authorIsClient: Boolean,
+          noteType: String,
+          noteSubType: String,
+          primaryText: String,
+          secondaryText: String,
+          tertiaryText: String,
+          diagnosisText: String,
+          addendum: [
+            {
+              name: String,
+              note: String,
+              timestamp: Date,
+            },
+          ],
+          timestamp: Date,
+          lock: { name: String, uniqueID: String },
+          pendOrSigned: String,
+        },
+      ],
+      isDeleteEnabled: Boolean,
+      lock: { name: String, uniqueID: String },
+    },
+  ],
+  draftNotes: [
+    {
+      refId: { type: String, default: "new" },
+      author: String,
+      authorId: String,
+      authorType: String,
+      authorIsClient: Boolean,
+      noteType: String,
+      noteSubType: String,
+      primaryText: String,
+      secondaryText: String,
+      tertiaryText: String,
+      diagnosisText: String,
+      timestamp: Date,
+      addendum: [
+        {
+          name: String,
+          note: String,
+          timestamp: Date,
+        },
+      ],
+      isAddendum: Boolean,
+    },
+  ],
+  codeSheet: [{ ...codeSheet, authorId: String }],
+  codeSheetDraft: codeSheet,
+});
+const notes = mongoose.model("Notes", notesSchema);
+module.exports = { notes, notesSchema };
