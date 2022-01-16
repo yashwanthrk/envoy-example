@@ -23,6 +23,10 @@ services:
     image: server1
     ports:
       - '4000:4000'
+    volumes:
+      - server1-volume:/usr/src/server1
+      - server1-node_modules:/usr/src/server1/node_modules
+
     networks:
       - envoy-network
 
@@ -35,6 +39,9 @@ services:
     networks:
       - envoy-network
 
+volumes:
+  server1-volume: null
+  server1-node_modules: null
 networks:
   envoy-network:
     driver: bridge
