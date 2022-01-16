@@ -4,6 +4,8 @@ const morgan = require("morgan");
 const app = express();
 app.use(morgan("dev"));
 app.get("/api/v2", function (req, res) {
+  console.log(`x-user-email: ${req.header("x-user-email")}`);
+  console.log(`x-jwt-payload: ${req.header("x-jwt-payload")}`);
   res.send("GET request to the homepage");
 });
 app.get("/health", (req, res) => {
