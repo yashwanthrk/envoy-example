@@ -1,4 +1,5 @@
 Spin up with:
+
 ```shell
 docker-compose up
 ```
@@ -17,4 +18,6 @@ x-envoy-upstream-service-time: 201
 ```
 
 
-Reference [in the blog post](https://blog.krudewig-online.de/2021/04/18/envoy-in-5-minutes.html).
+Reference [in the blog post]
+
+(https://blog.krudewig-online.de/2021/04/18/envoy-in-5-minutes.html).
